@@ -1,6 +1,6 @@
 FROM node:18
 
-# --- OS & Python dependencies ---
+# Install system and Python dependencies
 RUN apt-get update && \
     apt-get install -y \
     python3 \
@@ -10,28 +10,28 @@ RUN apt-get update && \
     ffmpeg \
     git \
     curl \
-    build-essential && \
+    build-essential \
+    libasound2-dev \
+    libsndfile1 && \
     pipx ensurepath
 
-# Ensure pipx is in PATH
-ENV PATH="/root/.local/bin:$PATH"
+# Install latest stable Rust using rustup
+RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+ENV PATH="/root/.cargo/bin:/root/.local/bin:$PATH"
+ENV PATH="/root/.local/pipx/venvs/openai-whisper/bin:$PATH"
+ENV PATH="/root/.local/pipx/venvs/TTS/bin:/root/.local/bin:$PATH"
 
-# --- Install Python tools using pipx ---
-RUN pipx install openai-whisper && \
-    pipx install TTS
 
-# --- App setup ---
+# Install Python tools using pipx (in isolated envs)
+RUN pipx install --include-deps openai-whisper && \
+    pipx install --include-deps TTS
+
+# Setup Node app
 WORKDIR /app
 COPY . .
 
-# Install Node dependencies
 RUN npm install
-
-# Ensure folders exist
 RUN mkdir -p uploads public/tts
 
-# Expose port
 EXPOSE 3000
-
-# --- Start Node server ---
 CMD ["npm", "start"]
