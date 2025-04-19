@@ -1,0 +1,32 @@
+services:
+  voice-assistant-ollama:
+    build: .
+    container_name: va-ollama
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./uploads:/app/uploads
+    environment:
+      - PORT=3000
+      - LLM_API_URL=http://ollama:11434/v1
+    depends_on:
+      - ollama
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    entrypoint: >
+      sh -c "ollama pull llama3 && ollama serve"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  ollama_models:
