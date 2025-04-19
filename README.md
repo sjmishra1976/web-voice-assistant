@@ -27,3 +27,9 @@ docker build -t voice-assistant .
 docker run -p 3000:3000 --name va voice-assistant
 
 Visit: http://localhost:3000
+
+
+For local build:
+
+npm install
+npm start
