@@ -22,14 +22,16 @@ This project uses:
 
 ## 🚀 Run with Docker
 
-```bash
-docker build -t voice-assistant .
-docker run -p 3000:3000 --name va voice-assistant
+    - cd web-va
+    ```bash
+    docker build -t voice-assistant .
+    docker run -p 3000:3000 --name va voice-assistant
+    Visit: http://localhost:3000
 
-Visit: http://localhost:3000
+   -  For local build:
+    npm install
+    npm start
 
 
-For local build:
-
-npm install
-npm start
+## From root folder, which will use ollama llm image 
+    docker-compose up --build 

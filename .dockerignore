@@ -1,8 +1,0 @@
-node_modules
-npm-debug.log
-__pycache__
-.env
-*.md
-*.log
-*.yml
-*.db
