@@ -1,22 +1,37 @@
 FROM node:18
 
-# System setup
+# --- OS & Python dependencies ---
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip ffmpeg && \
-    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu && \
-    pip3 install openai-whisper TTS
+    apt-get install -y \
+    python3 \
+    python3-pip \
+    python3-venv \
+    pipx \
+    ffmpeg \
+    git \
+    curl \
+    build-essential && \
+    pipx ensurepath
 
-# App setup
+# Ensure pipx is in PATH
+ENV PATH="/root/.local/bin:$PATH"
+
+# --- Install Python tools using pipx ---
+RUN pipx install openai-whisper && \
+    pipx install TTS
+
+# --- App setup ---
 WORKDIR /app
 COPY . .
 
 # Install Node dependencies
 RUN npm install
 
-# Prepare public/tts dir
-RUN mkdir -p public/tts uploads
+# Ensure folders exist
+RUN mkdir -p uploads public/tts
 
 # Expose port
 EXPOSE 3000
 
+# --- Start Node server ---
 CMD ["npm", "start"]
