@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Voice Assistant</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    #chat { margin-top: 20px; }
+    button { margin: 10px; padding: 10px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>🎙️ Voice Assistant</h1>
+  <button id="recordBtn">🎤 Record</button>
+  <div id="chat"></div>
+
+  <script>
+    const recordBtn = document.getElementById("recordBtn");
+    const chatBox = document.getElementById("chat");
+
+    let mediaRecorder;
+    let audioChunks = [];
+
+    recordBtn.onclick = async () => {
+      if (mediaRecorder?.state === "recording") {
+        mediaRecorder.stop();
+        recordBtn.innerText = "🎤 Record";
+        return;
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+
+      mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+        const formData = new FormData();
+        formData.append("audio", audioBlob, "voice.webm");
+
+        const res = await fetch("/voice", {
+          method: "POST",
+          body: formData
+        });
+
+        const data = await res.json();
+        chatBox.innerHTML += `<p><b>You:</b> ${data.transcript}</p>`;
+        chatBox.innerHTML += `<p><b>Assistant:</b> ${data.response}</p>`;
+        
+        const audio = new Audio(data.ttsUrl);
+        audio.play();
+      };
+
+      mediaRecorder.start();
+      recordBtn.innerText = "🛑 Stop";
+    };
+  </script>
+</body>
+</html>
