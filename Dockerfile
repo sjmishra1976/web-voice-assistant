@@ -33,5 +33,7 @@ COPY . .
 RUN npm install
 RUN mkdir -p uploads public/tts
 
+ENV PORT=3000
+ENV OPENAI_API_KEY=ollama
 EXPOSE 3000
 CMD ["npm", "start"]
