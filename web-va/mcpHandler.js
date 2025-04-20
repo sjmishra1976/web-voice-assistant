@@ -23,7 +23,7 @@ User: ${user_input}`;
 
   const completion = await openai.chat.completions.create({
    // model: "gpt-3.5-turbo",
-   model: "mistral",
+   model: "llama3.2",
     messages: [
       { role: "system", content: toolPrompt },
       { role: "user", content: user_input }
