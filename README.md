@@ -20,9 +20,9 @@ This project uses:
 - 🔊 Coqui TTS (text-to-speech)
 - ⚡ Node.js Express server + HTML frontend
 
-## 🚀 Run with Docker
+## 🚀 Run with Docker only UI part, for full e 2 e to work need to use docker compose.
 
-    - cd web-va
+- cd web-va
     ```bash
     docker build -t voice-assistant .
     docker run -p 3000:3000 --name va voice-assistant
@@ -33,5 +33,7 @@ This project uses:
     npm start
 
 
-## From root folder, which will use ollama llm image 
+## From root folder use docker compose to start both your project and ollama, which will use ollama llm image 
     docker-compose up --build 
+- Once containers are up, use below command to pull model in ollama running server inside docker container.
+    docker exec -it ollama-va ollama pull llama3
