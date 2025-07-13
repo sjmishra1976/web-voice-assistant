@@ -12,7 +12,7 @@ async function transcribeAudio(filePath) {
       fs.readFile(transcriptPath, "utf8", (err, data) => {
         if (err) return reject(err);
         resolve(data);
-      });
+      });   
     });
   });
 }

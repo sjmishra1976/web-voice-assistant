@@ -12,6 +12,7 @@ async function synthesizeSpeech(text) {
       if (err) return reject(err);
       resolve(filename);
     });
+    
   });
 }
 
